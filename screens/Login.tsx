@@ -9,7 +9,7 @@ export default function Login() {
             margin :10
         }}>
             <TouchableOpacity style={styles.exitbtn} onPress={onPress}>
-                <Text style={styles.exitText}>X</Text>
+                <Text style={styles.exitText}>x </Text>
              </TouchableOpacity>
             {/* header */}
             <View>  
@@ -19,7 +19,7 @@ export default function Login() {
             {/* body */}
             <View> 
             <Text style={styles.info}>Số điện thoại <Text style={styles.redtext}>*</Text></Text>
-            <TextInput style={styles.input} placeholder='UserName'/>
+            <TextInput style={styles.input}  placeholder='UserName'/>
             <Text style={styles.info}>Nhập mật khẩu <Text style={styles.redtext}>*</Text></Text>
             <TextInput style={styles.input} placeholder='Password'
             secureTextEntry={true}
@@ -31,7 +31,12 @@ export default function Login() {
             <View style={styles.buttonContainer}>
                 <Button onPress={onPress} title={'Đăng nhập'} color="red" />
             </View>
-            <Text style={styles.ft}>Bạn chưa có tài khoản? <TouchableOpacity onPress={onPress}><Text style={styles.redtext}>Đăng ký</Text></TouchableOpacity></Text>
+            <View style={{
+              flexDirection: 'row',
+              position: 'absolute', // vị trí tuyệt đối so với container
+              bottom: 0, // đặt nó ở cuối cùng theo chiều dọc
+            }}><Text style={styles.ft}>Bạn chưa có tài khoản? </Text><TouchableOpacity style={{}} onPress={onPress}><Text style={styles.redtext}>Đăng ký</Text></TouchableOpacity></View>
+            
             </View>
         </View>    
     );
@@ -42,7 +47,8 @@ function onPress()
 }
 const styles = StyleSheet.create({
 redtext:{
-    color: 'red'
+    color: 'red',
+    textAlign: 'center'
 },
 tittle:{
     fontSize: 30,
@@ -70,7 +76,8 @@ input: {
     alignItems: 'center', // Căn giữa theo trục ngang
   },
   buttonContainer: {
-    width: '90%', // Kích thước chiều ngang là 90% của chiều ngang màn hình
+    width: '100%', // Kích thước chiều ngang là 90% của chiều ngang màn hình
+  
     borderRadius: 10, // Bo tròn các góc với bán kính là 10
     overflow: 'hidden', // Đảm bảo rằng nội dung bên trong không bị tràn ra ngoài khi bo tròn gó
   },
@@ -79,13 +86,14 @@ input: {
   },
   ft:{
     alignItems: 'center',
-    marginTop: 20
+   
   },
   exitbtn:{
+    alignItems: 'flex-end'
     
   },
   exitText:{
     fontSize: 20,
-    textAlign: 'right'
+    // textAlign: 'right'
   }
 });
