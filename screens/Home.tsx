@@ -3,7 +3,10 @@ import {ScrollView,StatusBar,StyleSheet,Text,TextInput,TouchableOpacity,View,Toa
 
 
 export default function Home() {
+  
   return (
-    <Text>Home</Text>
+   <Text>Home</Text>
+    
   )
+  
 }
