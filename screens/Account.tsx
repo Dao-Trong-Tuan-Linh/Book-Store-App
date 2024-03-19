@@ -1,5 +1,12 @@
 import React from "react"
 import { AntDesign } from "@expo/vector-icons"
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useRef, useState } from "react"
 import { ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, ToastAndroid, SafeAreaView, Platform, Pressable, Image, Button } from "react-native"
 // import {SliderBox} from "react-native-image-slider-box"
@@ -92,7 +99,7 @@ export default function Account() {
               marginLeft: 25,
             }}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: 30, height: 30 }} source={require('../assets/checkout.png')} />
+                <MaterialIcons name="payment" size={27} color="black" />
               </View>
               <Text style={{ marginTop: 3 }}>Chờ thanh toán</Text>
             </TouchableOpacity>
@@ -100,7 +107,7 @@ export default function Account() {
               marginLeft: 25,
             }}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: 30, height: 30 }} source={require('../assets/box.png')} />
+                <AntDesign name="inbox" size={27} color="black" />
               </View>
               <Text style={{ marginTop: 3 }}>Đang xử lý</Text>
             </TouchableOpacity>
@@ -108,7 +115,7 @@ export default function Account() {
               marginLeft: 25,
             }}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: 30, height: 30 }} source={require('../assets/truck.png')} />
+                <MaterialCommunityIcons name="truck-fast-outline" size={27} color="black" />
               </View>
               <Text style={{ marginTop: 3 }}>Đang giao</Text>
             </TouchableOpacity>
@@ -116,7 +123,7 @@ export default function Account() {
               marginLeft: 25,
             }}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Image style={{ width: 30, height: 30 }} source={require('../assets/badge.png')} />
+                <SimpleLineIcons name="badge" size={27} color="black" />
               </View>
               <Text style={{ marginTop: 3 }}>Đã giao</Text>
             </TouchableOpacity>
@@ -130,7 +137,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/heart.png')} />
+            <EvilIcons name="heart" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Sản phẩm yêu thích</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -141,7 +148,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/like.png')} />
+            <EvilIcons name="like" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Đánh giá của tôi</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -152,7 +159,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/user.png')} />
+            <MaterialCommunityIcons name="account" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Thông tin tài khoản</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -163,7 +170,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/comment.png')} />
+            <MaterialCommunityIcons name="message-question-outline" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Hỗ trợ khách hàng</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -174,7 +181,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/birthday-cake.png')} />
+            <FontAwesome5 name="birthday-cake" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Chính sách sinh nhật App member</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -185,8 +192,8 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/document.png')} />
-            <Text style={{ fontSize: 17, marginLeft: 10 }}>Chính sách tích điểm tiêu điểm</Text>
+            <Ionicons name="document-text-outline" size={34} color="black" />
+            <Text style={{ fontSize: 17, marginLeft: 10 }}>Chính sách Tích điểm-Tiêu điểm</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
           <TouchableOpacity
@@ -196,7 +203,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/shield.png')} />
+            <Feather name="shield" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Chính sách bảo mật</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -207,7 +214,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/contact.png')} />
+            <AntDesign name="contacts" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Liên hệ với TokyoLife</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 10, marginBottom: 10, marginHorizontal: 20, height: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)' }} />
@@ -219,7 +226,7 @@ export default function Account() {
               alignItems: 'center',
               marginHorizontal: 20,
             }}>
-            <Image style={{ width: 30, height: 30 }} source={require('../assets/phone.png')} />
+            <Feather name="phone" size={34} color="black" />
             <Text style={{ fontSize: 17, marginLeft: 10 }}>Hotline 0364494459</Text>
           </TouchableOpacity>
         </View>
