@@ -79,7 +79,7 @@ export default function Home() {
 
         <ScrollView>
           <View style={{ marginTop: 20 }}>
-            <ScrollView style={{}} horizontal={true}>
+            <ScrollView horizontal={true}>
               <View
                 style={{
                   flexDirection: "row",
