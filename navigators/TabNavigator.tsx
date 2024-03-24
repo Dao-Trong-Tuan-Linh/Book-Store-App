@@ -6,6 +6,7 @@ import Home from "../screens/Home"
 import Cart from "../screens/Cart"
 import Favorite from "../screens/Favorite"
 import History from "../screens/Account"
+import Todoapp from "../screens/TodoApp"
 
 const Tab = createBottomTabNavigator()
 
@@ -16,6 +17,7 @@ export default function TabNavigator() {
         <Tab.Screen name="Cart" component={Cart}/>
         <Tab.Screen name="Favorite" component={Favorite}/>
         <Tab.Screen name="Tài khoản" component={History}/>
+        <Tab.Screen name="Todoapp" component={Todoapp}/>
     </Tab.Navigator>
   )
 }

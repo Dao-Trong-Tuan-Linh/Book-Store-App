@@ -35,13 +35,21 @@ export const SPACING: Spacing = {
 interface Color {
   primaryBackgroundColor:string,
   primaryBackgroundBox:string,
-  primaryColorLink:string
+  primaryColorLink:string,
+  borderColorProduct:string,
+  textWhiteColor:string,
+  textNewPrice:string,
+  textOldPrice:string
 }
 
 export const COLORS: Color = {
   primaryBackgroundColor: "#ff6563",
   primaryBackgroundBox:"#d22121",
-  primaryColorLink:"#c92027"
+  primaryColorLink:"#c92027",
+  borderColorProduct:"#F2F4F5",
+  textWhiteColor:'#fff',
+  textNewPrice:'#C92127',
+  textOldPrice:'#888888',
 };
 
 interface FontFamily {
