@@ -17,7 +17,6 @@ import {
   Pressable
 } from "react-native";
 import { COLORS } from "../theme/theme";
-import { AccountScreenProps} from "./types";
 import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;

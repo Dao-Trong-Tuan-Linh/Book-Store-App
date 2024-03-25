@@ -71,7 +71,7 @@ export default function Home() {
                 size={22}
                 color="black"
               />
-              <TextInput placeholder="Search book here" />
+              <TextInput style={{width:'100%'}} placeholder="Search book here" />
             </Pressable>
             <AntDesign name="shoppingcart" size={28} color="white" />
           </View>
