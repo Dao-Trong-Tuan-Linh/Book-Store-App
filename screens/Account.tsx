@@ -14,15 +14,15 @@ import {
   View,
   ImageBackground,
   Dimensions,
-  Pressable
+  Pressable,
+  TouchableOpacity
 } from "react-native";
 import { COLORS } from "../theme/theme";
-import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function Account() {
-   const navigation = useNavigation()
+export default function Account({ navigation, route }) {
+  //  const navigation = useNavigation()
   return (
     <>
     <ScrollView style={{width:screenWidth,flex:1,backgroundColor:'white'}}>
@@ -34,12 +34,12 @@ export default function Account() {
           <Text style={{fontSize:16,fontWeight:'400',color:'white'}}>Kết nối để nhận nhiều ưu đãi</Text>
           </View>
           <View style={{position:'absolute',bottom:20,flexDirection:'row',justifyContent:'space-around',width:screenWidth}}>
-            <Pressable onPress={() => navigation.navigate('Login')} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,borderColor:'white',borderWidth:1,borderRadius:5,alignItems:'center'}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login',{ isNavigation: false })} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,borderColor:'white',borderWidth:1,borderRadius:5,alignItems:'center'}}>
               <Text style={{color:'white'}}>Đăng nhập</Text>
-            </Pressable>
-            <Pressable onPress={() => navigation.navigate('Register')} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,backgroundColor:'white',borderRadius:5,alignItems:'center'}}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Register',{ isNavigation: false })} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,backgroundColor:'white',borderRadius:5,alignItems:'center'}}>
               <Text style={{color:'#222'}}>Đăng ký</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
 

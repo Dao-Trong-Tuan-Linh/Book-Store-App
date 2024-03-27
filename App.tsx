@@ -5,6 +5,7 @@ import TabNavigator from "./navigators/TabNavigator";
 import React from "react";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+import 'react-native-gesture-handler'
 
 const Stack = createStackNavigator()
 export default function App() {

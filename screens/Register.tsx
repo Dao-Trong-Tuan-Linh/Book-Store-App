@@ -1,129 +1,158 @@
-import React,{useState} from 'react'
-import { View, Text, Button, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Pressable,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { COLORS } from "../theme/theme";
+import { AntDesign } from "@expo/vector-icons";
 
-export default function Register() {
-  const [selectedOption, setSelectedOption] = useState(null);
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
+
+export default function Register({ navigation, route }) {
+  const [isNavigation, setIsNavigation] = useState(false);
+  // const navigation = useNavigation()
+  useEffect(() => {
+    if (route.params.isNavigation) {
+      setIsNavigation(route.params.isNavigation);
+    }
+  }, []);
+
+  console.log(isNavigation);
 
   return (
-    <View style={{ flex: 1, margin: 10 }}>
-      <TouchableOpacity style={styles.exitbtn}>
-        <Text style={styles.exitText}>x</Text>
-      </TouchableOpacity>
-      {/* header */}
-      <View>
-        <Text style={styles.title}>Đăng kí</Text>
-      </View>
-      {/* body */}
-      <View>
-        <Text style={styles.info}>Số điện thoại <Text style={styles.redtext}>*</Text></Text>
-        <TextInput style={styles.input} placeholder='Nhập số điện thoại' />
-        <Text style={styles.info}>Họ tên <Text style={styles.redtext}>*</Text></Text>
-        <TextInput style={styles.input} placeholder='Nhập họ tên' />
-        <Text style={styles.info}>Nhập mật khẩu <Text style={styles.redtext}>*</Text></Text>
-        <TextInput style={styles.input} secureTextEntry={true} />
-        <Text style={styles.info}>Email </Text>
-        <TextInput style={styles.input} />
-        <Text style={styles.info}>Ngày sinh </Text>
-        <TextInput style={styles.input} />
-
-        <Text style={styles.info}>Giới Tính</Text>
-        <View style={styles.rowContainer} >
-          
+    <DismissKeyboard>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ paddingLeft: 20, paddingRight: 20, marginTop: 20 }}>
+          {isNavigation ? (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <AntDesign name="left" size={24} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Tab',{screen:'Account'})}>
+              <Text style={{ fontSize: 16, color: "#999" }}>Bỏ qua</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ alignItems: "flex-end" }}
+            >
+              <AntDesign name="close" size={24} color="black" />
+            </Pressable>
+          )}
+          <View style={{ marginTop: 40 }}>
+            <Text style={{ fontSize: 24, fontWeight: "600" }}>Đăng ký</Text>
+            <View style={{ marginTop: 30, gap: 20 }}>
+              <View style={{ gap: 5 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>Họ tên</Text>
+                <Pressable
+                  style={{
+                    height: 40,
+                    borderColor: "#222",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    paddingLeft: 10,
+                  }}
+                >
+                  <TextInput
+                    style={{ width: "100%", height: "100%" }}
+                    placeholder="Nhập họ tên"
+                  />
+                </Pressable>
+              </View>
+              <View style={{ gap: 5 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                  Số điện thoại
+                </Text>
+                <Pressable
+                  style={{
+                    height: 40,
+                    borderColor: "#222",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    paddingLeft: 10,
+                  }}
+                >
+                  <TextInput
+                    style={{ width: "100%", height: "100%" }}
+                    placeholder="Nhập số điện thoại"
+                    keyboardType="numeric"
+                  />
+                </Pressable>
+              </View>
+              <View style={{ gap: 5 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                  Mật khẩu
+                </Text>
+                <Pressable
+                  style={{
+                    height: 40,
+                    borderColor: "#222",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    paddingLeft: 10,
+                  }}
+                >
+                  <TextInput
+                    style={{ width: "100%", height: "100%" }}
+                    placeholder="Nhập mật khẩu"
+                  />
+                </Pressable>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                marginTop: 30,
+                backgroundColor: COLORS.primaryBackgroundBox,
+                height: 46,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 16, fontWeight: "500" }}>
+                Đăng ký
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            alignItems: "flex-end",
+            justifyContent: "center",
+            marginBottom: 10,
+          }}
+        >
+          <Text>Bạn đã có tài khoản?</Text>
           <TouchableOpacity
-            style={[styles.smallButton, selectedOption === 1 ? styles.selectedButton : null]}
-            
+            onPress={() => navigation.navigate("Login", { isNavigation: true })}
           >
-            
-            {selectedOption === 1 ? <Text style={styles.checkmark}>✓</Text> : null}
-          </TouchableOpacity>
-          <Text style={[styles.genderLabel, { marginRight: 10 }]}>Nam</Text> 
-          <TouchableOpacity
-            style={[styles.smallButton, selectedOption === 2 ? styles.selectedButton : null]}
-          >
-            {selectedOption === 2 ? <Text style={styles.checkmark}>✓</Text> : null}
-          </TouchableOpacity>
-          <Text style={[styles.genderLabel, { marginLeft: 2 }]}>Nữ</Text>
-        </View>
-      </View>
-
-      {/* footer */}
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Button title={'Đăng kí'} color="red" />
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', position: 'absolute', bottom: 0 }}>
-          <Text style={styles.ft}>Bạn đã có tài khoản? </Text>
-          <TouchableOpacity >
-            <Text style={styles.redtext}>Đăng nhập</Text>
+            <Text style={{ color: COLORS.primaryBackgroundColor }}>
+              Đăng nhập
+            </Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </View>
-  )
+      </SafeAreaView>
+    </DismissKeyboard>
+  );
 }
-
-const styles = StyleSheet.create({
-  smallButton: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectedButton: {
-    backgroundColor: 'black',
-  },
-  redtext: {
-    color: 'red',
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 30,
-    marginBottom: 10,
-  },
-  info: {},
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    width: '100%',
-  },
-  container: {
-    flex: 1,
-    margin: 20,
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  exitbtn: {
-    alignItems: 'flex-end',
-  },
-  exitText: {
-    fontSize: 20,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    
-  },
-  ft: {
-    alignItems: 'center',
-  },
-  checkmark: {
-    color: 'white',
-    fontSize: 12,
-  },
-  genderLabel: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 5, // Thêm khoảng cách phía trên chữ giới tính
-  },
-});
