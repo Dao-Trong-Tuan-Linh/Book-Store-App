@@ -22,7 +22,7 @@ import { COLORS } from "../theme/theme";
 const screenWidth = Dimensions.get("window").width;
 
 export default function Account({ navigation, route }) {
-  //  const navigation = useNavigation()
+  
   return (
     <>
     <ScrollView style={{width:screenWidth,flex:1,backgroundColor:'white'}}>

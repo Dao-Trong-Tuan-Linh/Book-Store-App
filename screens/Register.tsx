@@ -22,7 +22,7 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Register({ navigation, route }) {
   const [isNavigation, setIsNavigation] = useState(false);
-  // const navigation = useNavigation()
+ 
   useEffect(() => {
     if (route.params.isNavigation) {
       setIsNavigation(route.params.isNavigation);

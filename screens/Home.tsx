@@ -23,7 +23,7 @@ import { COLORS } from "../theme/theme";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-export default function Home() {
+export default function Home({navigation}) {
   const SIZE = 100;
   const images = [
     "https://img.etimg.com/thumb/msid-93051525,width-1070,height-580,imgsize-2243475,overlay-economictimes/photo.jpg",
@@ -73,7 +73,9 @@ export default function Home() {
               />
               <TextInput style={{width:'100%'}} placeholder="Search book here" />
             </Pressable>
+            <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
             <AntDesign name="shoppingcart" size={28} color="white" />
+            </TouchableOpacity>
           </View>
         </View>
 
