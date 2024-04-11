@@ -32,7 +32,7 @@ export default function Cart({ navigation }) {
       >
         <TouchableOpacity
           style={{ zIndex: 1 }}
-          onPress={() => navigation.navigate("Tab", { screen: "Home" })}
+          onPress={() => navigation.goBack()}
         >
           <AntDesign name="arrowleft" size={24} color="white" />
         </TouchableOpacity>

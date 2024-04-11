@@ -280,7 +280,8 @@ export default function Home({navigation}) {
                     borderWidth: 1,
                   }}
                 >
-                  <Image
+                 <TouchableOpacity onPress={() => navigation.navigate("DetailBook")}>
+                 <Image
                     style={{
                       width: screenWidth * 0.4,
                       height: screenHeight * 0.25,
@@ -288,6 +289,7 @@ export default function Home({navigation}) {
                     }}
                     source={require("../assets/tuoi-tho-du-doi.jpg")}
                   />
+                 </TouchableOpacity>
                   <View
                     style={{
                       flexDirection: "column",

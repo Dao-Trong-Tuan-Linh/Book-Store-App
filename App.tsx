@@ -6,6 +6,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import 'react-native-gesture-handler'
 import Cart from "./screens/Cart";
+import DetailBook from "./screens/DetailBook";
 
 const Stack = createStackNavigator()
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Register" component={Register}/>
         <Stack.Screen name="Cart" component={Cart}/>
+        <Stack.Screen name="DetailBook" component={DetailBook}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
