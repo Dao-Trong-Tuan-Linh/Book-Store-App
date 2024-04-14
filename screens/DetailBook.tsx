@@ -1,6 +1,5 @@
-import React from "react";
+import React,{useState} from "react";
 import {
-  SafeAreaView,
   TouchableOpacity,
   View,
   Platform,
@@ -12,15 +11,21 @@ import {
 import { COLORS } from "../theme/theme";
 import { AntDesign } from "@expo/vector-icons";
 import Carousel from "pinar";
+import ConfirmCart from "../components/ConfirmCart";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function DetailBook({ navigation }) {
+  const [isVisible,setIsVisible] = useState(false)
   const images = [
     { id: 0, img: require("../assets/tuoi-tho-du-doi.jpg") },
     { id: 1, img: require("../assets/truyen-thieu-nhi.jpg") },
   ];
+
+  const navigateToCart = () => {
+    navigation.navigate("Cart")
+  }
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -570,6 +575,7 @@ export default function DetailBook({ navigation }) {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={() => setIsVisible(true)}
         >
           <Text
             style={{
@@ -594,6 +600,7 @@ export default function DetailBook({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
+      <ConfirmCart isVisible={isVisible} setIsVisible={setIsVisible} onNavigate={navigateToCart}/>
     </View>
   );
 }

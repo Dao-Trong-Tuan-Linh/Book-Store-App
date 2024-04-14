@@ -36,20 +36,24 @@ interface Color {
   primaryBackgroundColor:string,
   primaryBackgroundBox:string,
   primaryColorLink:string,
+  primaryYellowColor:string,
   borderColorProduct:string,
   textWhiteColor:string,
   textNewPrice:string,
-  textOldPrice:string
+  textOldPrice:string,
+  buttonBrownColor:string
 }
 
 export const COLORS: Color = {
   primaryBackgroundColor: "#ff6563",
   primaryBackgroundBox:"#d22121",
   primaryColorLink:"#c92027",
+  primaryYellowColor:'#fe981f',
   borderColorProduct:"#F2F4F5",
   textWhiteColor:'#fff',
   textNewPrice:'#C92127',
   textOldPrice:'#888888',
+  buttonBrownColor:'#ebebeb'
 };
 
 interface FontFamily {

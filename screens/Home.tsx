@@ -23,7 +23,7 @@ import { COLORS } from "../theme/theme";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
   const SIZE = 100;
   const images = [
     "https://img.etimg.com/thumb/msid-93051525,width-1070,height-580,imgsize-2243475,overlay-economictimes/photo.jpg",
@@ -71,10 +71,31 @@ export default function Home({navigation}) {
                 size={22}
                 color="black"
               />
-              <TextInput style={{width:'100%'}} placeholder="Search book here" />
+              <TextInput
+                style={{ width: "100%" }}
+                placeholder="Search book here"
+              />
             </Pressable>
-            <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
-            <AntDesign name="shoppingcart" size={28} color="white" />
+            <TouchableOpacity
+              style={{ position: "relative" }}
+              onPress={() => navigation.navigate("Cart")}
+            >
+              <AntDesign name="shoppingcart" size={28} color="white" />
+              {/* <View
+                style={{
+                  position: "absolute",
+                  top: -10,
+                  left: 10,
+                  width: 24,
+                  height: 24,
+                  borderRadius: 50,
+                  backgroundColor: COLORS.primaryBackgroundBox,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontWeight: "500" }}>5</Text>
+              </View> */}
             </TouchableOpacity>
           </View>
         </View>
@@ -280,16 +301,18 @@ export default function Home({navigation}) {
                     borderWidth: 1,
                   }}
                 >
-                 <TouchableOpacity onPress={() => navigation.navigate("DetailBook")}>
-                 <Image
-                    style={{
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
-                  />
-                 </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("DetailBook")}
+                  >
+                    <Image
+                      style={{
+                        width: screenWidth * 0.4,
+                        height: screenHeight * 0.25,
+                        resizeMode: "contain",
+                      }}
+                      source={require("../assets/tuoi-tho-du-doi.jpg")}
+                    />
+                  </TouchableOpacity>
                   <View
                     style={{
                       flexDirection: "column",
