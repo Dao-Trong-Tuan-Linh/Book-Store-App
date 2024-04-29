@@ -236,9 +236,9 @@ export default function Cart({ navigation }) {
           justifyContent:'space-between'
         }}
       >
-        <View>
-          <Text>Thành tiền</Text>
-          <Text>0 đồng</Text>
+        <View style={{flexDirection:'column',gap:5}}>
+          <Text style={{fontSize:18,fontWeight:'600'}}>Thành tiền</Text>
+          <Text style={{fontSize:16,color:'#ff9227',fontWeight:'600'}}>0 đồng</Text>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("Tab", { screen: "Home" })}

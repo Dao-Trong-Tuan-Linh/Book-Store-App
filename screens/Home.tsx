@@ -127,6 +127,7 @@ export default function Home({ navigation }) {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
+                    onPress={() => navigation.navigate("CategoryProducts")}
                   >
                     <Image
                       style={{ width: 65, height: 65, borderRadius: 10 }}
@@ -282,7 +283,7 @@ export default function Home({ navigation }) {
               }}
             >
               <Text style={{ fontSize: 24, fontWeight: "600" }}>
-                Không thể bỏ lỡ
+                Văn học
               </Text>
               <Text style={{ color: COLORS.primaryColorLink, fontSize: 16 }}>
                 Xem tất cả
@@ -399,7 +400,7 @@ export default function Home({ navigation }) {
                       height: screenHeight * 0.25,
                       resizeMode: "contain",
                     }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
+                    source={require("../assets/2.jpg")}
                   />
                   <View
                     style={{
@@ -408,7 +409,7 @@ export default function Home({ navigation }) {
                       alignItems: "flex-start",
                     }}
                   >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
+                    <Text>Tô bình yên-vẽ hạnh phúc</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -487,7 +488,7 @@ export default function Home({ navigation }) {
                       height: screenHeight * 0.25,
                       resizeMode: "contain",
                     }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
+                    source={require("../assets/3jpg.jpg")}
                   />
                   <View
                     style={{
@@ -496,7 +497,7 @@ export default function Home({ navigation }) {
                       alignItems: "flex-start",
                     }}
                   >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
+                    <Text>Trốn lên mái nhà để khóc</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -575,7 +576,7 @@ export default function Home({ navigation }) {
                       height: screenHeight * 0.25,
                       resizeMode: "contain",
                     }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
+                    source={require("../assets/4.jpg")}
                   />
                   <View
                     style={{
@@ -584,7 +585,7 @@ export default function Home({ navigation }) {
                       alignItems: "flex-start",
                     }}
                   >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
+                    <Text>Thương</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -666,7 +667,7 @@ export default function Home({ navigation }) {
               }}
             >
               <Text style={{ fontSize: 24, fontWeight: "600" }}>
-                Không thể bỏ lỡ
+                Kỹ năng sống
               </Text>
               <Text style={{ color: COLORS.primaryColorLink, fontSize: 16 }}>
                 Xem tất cả
@@ -1046,7 +1047,7 @@ export default function Home({ navigation }) {
               }}
             >
               <Text style={{ fontSize: 24, fontWeight: "600" }}>
-                Không thể bỏ lỡ
+                Tâm lý
               </Text>
               <Text style={{ color: COLORS.primaryColorLink, fontSize: 16 }}>
                 Xem tất cả

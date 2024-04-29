@@ -12,6 +12,7 @@ import { COLORS } from "../theme/theme";
 import { AntDesign } from "@expo/vector-icons";
 import Carousel from "pinar";
 import ConfirmCart from "../components/ConfirmCart";
+import ShowAlert from "../components/ShowAlert";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -23,9 +24,8 @@ export default function DetailBook({ navigation }) {
     { id: 1, img: require("../assets/truyen-thieu-nhi.jpg") },
   ];
 
-  const navigateToCart = () => {
-    navigation.navigate("Cart")
-  }
+  
+  const showAlert = () => ShowAlert({title:'Thông báo',message:'Số lượng x không có sẵn'})
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -594,13 +594,14 @@ export default function DetailBook({ navigation }) {
             justifyContent: "center",
             backgroundColor: COLORS.primaryBackgroundBox,
           }}
+          onPress={showAlert}
         >
           <Text style={{ fontSize: 16, fontWeight: "600", color: "white" }}>
             Mua ngay
           </Text>
         </TouchableOpacity>
       </View>
-      <ConfirmCart isVisible={isVisible} setIsVisible={setIsVisible} onNavigate={navigateToCart}/>
+      <ConfirmCart isVisible={isVisible} setIsVisible={setIsVisible} navigation={navigation}/>
     </View>
   );
 }
