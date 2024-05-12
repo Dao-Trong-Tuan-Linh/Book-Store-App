@@ -20,8 +20,8 @@ const screenHeight = Dimensions.get("window").height;
 export default function DetailBook({ navigation }) {
   const [isVisible,setIsVisible] = useState(false)
   const images = [
-    { id: 0, img: require("../assets/tuoi-tho-du-doi.jpg") },
-    { id: 1, img: require("../assets/truyen-thieu-nhi.jpg") },
+    { id: 0, img: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg" },
+    { id: 1, img: "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/tuoi_tho_du_doi___tap_1_tai_ban_2019/2021_07_29_16_46_46_2-390x510.jpg?_gl=1*1j1o0uv*_ga*MjAxMjA0MzAyOC4xNzEwMjI4MTkz*_ga_460L9JMC2G*MTcxNTUyNTU4Ni4xNS4xLjE3MTU1MjcxMTQuNTQuMC4xOTkxNDkyMDcy*_gcl_aw*R0NMLjE3MTAyNjE2OTUuQ2owS0NRanctci12QmhDLUFSSXNBR2dVTzJBQ3liTzRpZkJQcEhQWnROb3pEVE4tWk1FaFc1YVV2ekcxTWFPdVAtdWtVUVdEME5SNEd4TWFBaWtJRUFMd193Y0I.*_gcl_au*MTM4OTc0MjI5My4xNzEwMjI4MTkz" },
   ];
 
   
@@ -93,8 +93,9 @@ export default function DetailBook({ navigation }) {
                     style={{
                       width: "100%",
                       height: "100%",
+                      objectFit:'contain'
                     }}
-                    source={item.img}
+                    source={{uri:`${item.img}`}}
                     key={item.id}
                   />
                 ))}

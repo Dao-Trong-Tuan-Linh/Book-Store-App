@@ -20,7 +20,7 @@ const screenHeight = Dimensions.get("window").height;
 interface ItemDetailProps {
   id: number;
   name: string;
-  image: ImageSourcePropType;
+  image: string;
   newPrice: number;
   oldPrice?: number;
 }
@@ -33,28 +33,28 @@ export default function CategoryProducts({ navigation }) {
     {
       id: 1,
       name: "Tuổi thơ dữ dội",
-      image: require("../assets/tuoi-tho-du-doi.jpg"),
+      image: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 2,
       name: "Tô bình yên-Vẽ hạnh phúc",
-      image: require("../assets/2.jpg"),
+      image: "https://cdn0.fahasa.com/media/catalog/product/8/9/8935325006289.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 3,
       name: "Trôn lên mái nhà để khóc",
-      image: require("../assets/3jpg.jpg"),
+      image: "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-tr_n-l_n-m_i-nh_-_-kh_c-2.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 4,
       name: "Thương",
-      image: require("../assets/4.jpg"),
+      image: "https://cdn0.fahasa.com/media/catalog/product/b/i/bia1_thuong_1.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
@@ -88,7 +88,7 @@ export default function CategoryProducts({ navigation }) {
               height: screenHeight * 0.3,
               resizeMode: "contain",
             }}
-            source={item.image}
+            source={{uri:`${item.image}`}}
           />
         </View>
         <View style={{ marginLeft: 20, marginRight: 20,flexDirection:'column',gap:10 }}>
@@ -169,7 +169,7 @@ export default function CategoryProducts({ navigation }) {
               height: screenHeight * 0.3,
               resizeMode: "contain",
             }}
-            source={item.image}
+            source={{uri:`${item.image}`}}
           />
         </View>
         <View style={{ marginLeft: 20, marginRight: 20,flexDirection:'column',gap:10 }}>
