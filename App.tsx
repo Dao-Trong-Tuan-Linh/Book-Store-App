@@ -8,7 +8,7 @@ import 'react-native-gesture-handler'
 import Cart from "./screens/Cart";
 import DetailBook from "./screens/DetailBook";
 import NetInfo from "@react-native-community/netinfo"
-import {Alert } from 'react-native';
+import {Alert,AppRegistry } from 'react-native';
 import CategoryProducts from "./screens/CategoryProducts";
 
 const Stack = createStackNavigator()
@@ -45,5 +45,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
 
 

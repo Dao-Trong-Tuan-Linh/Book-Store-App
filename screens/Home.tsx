@@ -54,7 +54,7 @@ export default function Home({ navigation }) {
               paddingRight: 15,
             }}
           >
-            <Pressable
+            <Pressable  
               style={{
                 flexDirection: "row",
                 alignItems: "center",

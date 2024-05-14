@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 import Carousel from "pinar";
 import ConfirmCart from "../components/ConfirmCart";
 import ShowAlert from "../components/ShowAlert";
+import ExpandableText from "../components/ExpandableText";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -129,14 +130,14 @@ export default function DetailBook({ navigation }) {
             <Text style={{fontSize:20,fontWeight:'600'}}>Thông tin sản phẩm</Text>
           </View>
           <View style={{paddingHorizontal:10,paddingTop:5,flexDirection:'row',gap:60}}>
-            <View style={{flexDirection:'column',gap:20}}>
+            <View style={{flexDirection:'column',gap:15}}>
               <Text>Mã hàng</Text>
               <Text>Nhà cung cấp</Text>
               <Text>Tác giả</Text>
               <Text>Nhà xuất bản</Text>
               <Text>Năm xuất bản</Text>
             </View>
-            <View style={{flexDirection:'column',gap:20}}>
+            <View style={{flexDirection:'column',gap:15}}>
               <Text>123456</Text>
               <Text>abcd</Text>
               <Text>Phùng Quán</Text>
@@ -144,23 +145,26 @@ export default function DetailBook({ navigation }) {
               <Text>2017</Text>
             </View>
           </View>
-          <View style={{paddingTop:20,paddingHorizontal:5,paddingBottom:10,gap:20}}>
-            <Text>
-            “Tuổi Thơ Dữ Dội” là một câu chuyện hay, cảm động viết về tuổi thơ. Sách dày 404 trang mà người đọc không bao giờ muốn ngừng lại, bị lôi cuốn vì những nhân vật ngây thơ có, khôn ranh có, anh hùng có, vì những sự việc khi thì ly kỳ, khi thì hài hước, khi thì gây xúc động đến ứa nước mắt...
-            </Text>
-            <Text>
-            "Tuổi Thơ Dữ Dội” không phải chỉ là một câu chuyện cổ tích, mà là một câu chuyện có thật ở trần gian, ở đó, những con người tuổi nhỏ đã tham gia vào cuộc kháng chiến chống xâm lược bảo vệ Tổ quốc với một chuỗi những chiến công đầy ắp li kì và hấp dẫn. Đọc Tuổi Thơ Dữ Dội chính là đọc lại một phần lịch sử tuổi thơ Việt, thấm đẫm xúc động, cảm phục và tự hào..."
-            </Text>
-            <Text>
-            Nhà thơ - nhạc sĩ Nguyễn Trọng Tạo
-            </Text>
-            <Text>
-            "Có một viên ngọc quý thời gian dành riêng để ban tặng con người, đó là Tuổi thơ. Viên ngọc màu nhiệm, trong sáng nhưng quá mong manh, không thể tìm thấy lần thứ hai trong đời. Và có một thế hệ người Việt chưa bao giờ được cầm viên ngọc trên tay, “Tuổi thơ dữ dội” của Phùng Quán được viết cho thế hệ đó. Hãy đọc để nhớ lại, để tự hào, và để cầu nguyện cho những Tuổi thơ sắp ra đời…”
-            </Text>
-            <Text>
-            Nhà văn Hoàng Phủ Ngọc Tường
-            </Text>
-          </View>
+          <ExpandableText>
+          “Tuổi Thơ Dữ Dội” là một câu chuyện hay, cảm động viết về tuổi thơ. Sách
+        dày 404 trang mà người đọc không bao giờ muốn ngừng lại, bị lôi cuốn vì
+        những nhân vật ngây thơ có, khôn ranh có, anh hùng có, vì những sự việc
+        khi thì ly kỳ, khi thì hài hước, khi thì gây xúc động đến ứa nước mắt...
+        "Tuổi Thơ Dữ Dội” không phải chỉ là một câu chuyện cổ tích, mà là một
+        câu chuyện có thật ở trần gian, ở đó, những con người tuổi nhỏ đã tham
+        gia vào cuộc kháng chiến chống xâm lược bảo vệ Tổ quốc với một chuỗi
+        những chiến công đầy ắp li kì và hấp dẫn. Đọc Tuổi Thơ Dữ Dội chính là
+        đọc lại một phần lịch sử tuổi thơ Việt, thấm đẫm xúc động, cảm phục và
+        tự hào..."
+        Nhà thơ - nhạc sĩ Nguyễn Trọng Tạo
+        "Có một viên ngọc quý thời gian dành riêng để ban tặng con người, đó là
+        Tuổi thơ. Viên ngọc màu nhiệm, trong sáng nhưng quá mong manh, không thể
+        tìm thấy lần thứ hai trong đời. Và có một thế hệ người Việt chưa bao giờ
+        được cầm viên ngọc trên tay, “Tuổi thơ dữ dội” của Phùng Quán được viết
+        cho thế hệ đó. Hãy đọc để nhớ lại, để tự hào, và để cầu nguyện cho những
+        Tuổi thơ sắp ra đời…”
+        Nhà văn Hoàng Phủ Ngọc Tường
+          </ExpandableText>
         </View>
         <View style={{backgroundColor:'white',flexDirection:'column',gap:10,paddingBottom:10,marginBottom:70}}>
             <View style={{padding:10,borderBottomColor:COLORS.primaryBackgroundBox,borderBottomWidth:1}}>

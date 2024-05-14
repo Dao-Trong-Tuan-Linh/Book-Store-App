@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef} from "react";
 import {
   TouchableOpacity,
   View,
@@ -13,6 +13,8 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { COLORS } from "../theme/theme";
+import RBSheet from 'react-native-raw-bottom-sheet';
+import DialogBottom from "../components/DialogBottom";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -27,6 +29,11 @@ interface ItemDetailProps {
 
 interface ItemProps {
   item: ItemDetailProps;
+}
+
+interface RBSheetRef {
+  open: () => void;
+  close: () => void;
 }
 export default function CategoryProducts({ navigation }) {
   const data = [
@@ -59,6 +66,8 @@ export default function CategoryProducts({ navigation }) {
       oldPrice: 12000,
     },
   ];
+
+  const refRBSheet = useRef<RBSheetRef>(null);
 
   const Item = ({ item }: ItemProps) => {
     const isEven = item.id % 2 == 0;
@@ -280,6 +289,7 @@ export default function CategoryProducts({ navigation }) {
             />
           </TouchableOpacity>
           <TouchableOpacity
+          onPress={() => refRBSheet.current?.open()}
             style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
           >
             <AntDesign name="filter" size={16} color="rgb(85, 85, 85)" />
@@ -294,6 +304,7 @@ export default function CategoryProducts({ navigation }) {
         renderItem={Item}
         keyExtractor={(item) => item.id.toString()}
       />
+      <DialogBottom refRBSheet={refRBSheet}/>
     </SafeAreaView>
   );
 }
