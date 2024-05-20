@@ -23,7 +23,7 @@ export default function Cart({ navigation }) {
       <View
         style={{
           backgroundColor: COLORS.primaryBackgroundBox,
-          height: 80,
+          height: 90,
           flexDirection: "row",
           alignItems: "flex-end",
           paddingLeft: 20,
@@ -608,7 +608,7 @@ export default function Cart({ navigation }) {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Tab", { screen: "Home" })}
+          onPress={() => navigation.navigate("DeliveryAddress")}
           style={{
             width: 160,
             height: 50,

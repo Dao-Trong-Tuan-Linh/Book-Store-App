@@ -40,14 +40,14 @@ export default function Home({ navigation }) {
       >
         <View
           style={{
-            height:90,
+            height:100,
             backgroundColor: COLORS.primaryBackgroundBox,
             padding: 10,
           }}
         >
           <View
             style={{
-              marginTop:30,
+              marginTop:45,
               flexDirection: "row",
               alignItems: "center",
               gap: 5,
@@ -156,7 +156,7 @@ export default function Home({ navigation }) {
                   >
                     <Image
                       style={{ width: 65, height: 65, borderRadius: 10 }}
-                      source={{uri:"https://fs.chungta.com/Files/14124E6776864C6D8FB32525A6F38DAA/image=jpeg/7d5c9cf54ff04f3a9b032701d2a5abf3/Kinh-te-1.jpg"}}
+                      source={{uri:"https://kinhtevadubao.vn/stores/news_dataimages/nguyenvt/052022/30/17/2945_minh_hYa.jpg?rt=20220530173026"}}
                     />
                   </TouchableOpacity>
                   <Text style={{ textAlign: "center" }}>Kinh tế</Text>

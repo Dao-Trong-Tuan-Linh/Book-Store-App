@@ -10,6 +10,7 @@ import DetailBook from "./screens/DetailBook";
 import NetInfo from "@react-native-community/netinfo"
 import {Alert,AppRegistry } from 'react-native';
 import CategoryProducts from "./screens/CategoryProducts";
+import DeliveryAddress from "./screens/DeliveryAddress";
 
 const Stack = createStackNavigator()
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
         <Stack.Screen name="Cart" component={Cart}/>
         <Stack.Screen name="DetailBook" component={DetailBook}/>
         <Stack.Screen name="CategoryProducts" component={CategoryProducts}/>
+        <Stack.Screen name="DeliveryAddress" component={DeliveryAddress}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

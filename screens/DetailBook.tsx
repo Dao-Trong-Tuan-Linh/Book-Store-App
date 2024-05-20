@@ -31,7 +31,7 @@ export default function DetailBook({ navigation }) {
     <View style={{ flex: 1 }}>
       <View
         style={{
-          height: 80,
+          height: 90,
           backgroundColor: COLORS.primaryBackgroundBox,
           justifyContent: "flex-end",
         }}

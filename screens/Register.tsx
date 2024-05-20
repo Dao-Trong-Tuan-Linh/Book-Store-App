@@ -34,7 +34,7 @@ export default function Register({ navigation, route }) {
   return (
     <DismissKeyboard>
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <View style={{ paddingLeft: 20, paddingRight: 20, marginTop: 20 }}>
+        <View style={{ paddingLeft: 20, paddingRight: 20, marginTop: 50 }}>
           {isNavigation ? (
             <View
               style={{

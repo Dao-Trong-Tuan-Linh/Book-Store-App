@@ -1,4 +1,4 @@
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import {
   TouchableOpacity,
   View,
@@ -7,14 +7,12 @@ import {
   FlatList,
   Dimensions,
   Image,
-  ImageSourcePropType,
-  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { COLORS } from "../theme/theme";
-import RBSheet from 'react-native-raw-bottom-sheet';
 import DialogBottom from "../components/DialogBottom";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -31,43 +29,43 @@ interface ItemProps {
   item: ItemDetailProps;
 }
 
-interface RBSheetRef {
-  open: () => void;
-  close: () => void;
-}
 export default function CategoryProducts({ navigation }) {
   const data = [
     {
       id: 1,
       name: "Tuổi thơ dữ dội",
-      image: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg",
+      image:
+        "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 2,
       name: "Tô bình yên-Vẽ hạnh phúc",
-      image: "https://cdn0.fahasa.com/media/catalog/product/8/9/8935325006289.jpg",
+      image:
+        "https://cdn0.fahasa.com/media/catalog/product/8/9/8935325006289.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 3,
       name: "Trôn lên mái nhà để khóc",
-      image: "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-tr_n-l_n-m_i-nh_-_-kh_c-2.jpg",
+      image:
+        "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-1-tr_n-l_n-m_i-nh_-_-kh_c-2.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
     {
       id: 4,
       name: "Thương",
-      image: "https://cdn0.fahasa.com/media/catalog/product/b/i/bia1_thuong_1.jpg",
+      image:
+        "https://cdn0.fahasa.com/media/catalog/product/b/i/bia1_thuong_1.jpg",
       newPrice: 75000,
       oldPrice: 12000,
     },
   ];
 
-  const refRBSheet = useRef<RBSheetRef>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const Item = ({ item }: ItemProps) => {
     const isEven = item.id % 2 == 0;
@@ -97,11 +95,22 @@ export default function CategoryProducts({ navigation }) {
               height: screenHeight * 0.3,
               resizeMode: "contain",
             }}
-            source={{uri:`${item.image}`}}
+            source={{ uri: `${item.image}` }}
           />
         </View>
-        <View style={{ marginLeft: 20, marginRight: 20,flexDirection:'column',gap:10 }}>
-          <Text style={{ fontSize: 18 }}>{item.name}</Text>
+        <View
+          style={{
+            marginLeft: 20,
+            marginRight: 20,
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <View style={{ height: 40 }}>
+            <Text style={{ fontSize: 16 }} numberOfLines={2}>
+              {item.name}
+            </Text>
+          </View>
           <View
             style={{
               width: "100%",
@@ -178,11 +187,22 @@ export default function CategoryProducts({ navigation }) {
               height: screenHeight * 0.3,
               resizeMode: "contain",
             }}
-            source={{uri:`${item.image}`}}
+            source={{ uri: `${item.image}` }}
           />
         </View>
-        <View style={{ marginLeft: 20, marginRight: 20,flexDirection:'column',gap:10 }}>
-          <Text style={{ fontSize: 18 }}>{item.name}</Text>
+        <View
+          style={{
+            marginLeft: 20,
+            marginRight: 20,
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <View style={{ height: 40 }}>
+            <Text style={{ fontSize: 16 }} numberOfLines={2}>
+              {item.name}
+            </Text>
+          </View>
           <View
             style={{
               width: "100%",
@@ -240,7 +260,7 @@ export default function CategoryProducts({ navigation }) {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={{
-          height: 60,
+          height: 90,
           borderBottomColor: "#ccc",
           borderBottomWidth: 1,
           alignItems: "flex-start",
@@ -289,7 +309,7 @@ export default function CategoryProducts({ navigation }) {
             />
           </TouchableOpacity>
           <TouchableOpacity
-          onPress={() => refRBSheet.current?.open()}
+            onPress={() => bottomSheetRef.current?.collapse()}
             style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
           >
             <AntDesign name="filter" size={16} color="rgb(85, 85, 85)" />
@@ -304,7 +324,7 @@ export default function CategoryProducts({ navigation }) {
         renderItem={Item}
         keyExtractor={(item) => item.id.toString()}
       />
-      <DialogBottom refRBSheet={refRBSheet}/>
+      <DialogBottom bottomSheetRef={bottomSheetRef} />
     </SafeAreaView>
   );
 }
