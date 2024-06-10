@@ -15,6 +15,7 @@ import DialogBottom from "../components/DialogBottom";
 import BottomSheet from "@gorhom/bottom-sheet";
 import useGetBooksByCategory from "../hooks/useGetBooksByCategory";
 import { Book } from "./Home";
+import useSearchBooks from "../hooks/useSearchBooks";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,17 +27,9 @@ interface ItemProps {
 }
 
 export default function CategoryProducts({ navigation,route }) {
-  console.log(route.params.categoryBooks)
+  console.log(route.params.searchQuery)
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const categories = useMemo(() => [
-    {category:"van_hoc",label:"Văn học"},
-    {category:"ky_nang_song",label:"Kỹ năng sống"},
-    {category:"kinh_te",label:"Kinh tế"},
-    {category:"sach_thieu_nhi",label:"Sách thiếu nhi"}
-  ],[])
-
-  const category = categories.filter(c => c.category ==route.params.categoryBooks)[0].label
   const Item = ({ item }: ItemProps) => {
     return (
       <TouchableOpacity
@@ -133,7 +126,7 @@ export default function CategoryProducts({ navigation,route }) {
     </TouchableOpacity>
     )
   };
-  const {loading,books} = useGetBooksByCategory(route.params.categoryBooks)
+  const {loading,books} = useSearchBooks(route.params.searchQuery)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -152,47 +145,15 @@ export default function CategoryProducts({ navigation,route }) {
             paddingBottom: 10,
             paddingLeft: 20,
             gap: 120,
+            position:'relative'
           }}
         >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={{position:'absolute',left:20,bottom:20}} onPress={() => navigation.goBack()}>
             <AntDesign name="arrowleft" size={24} color="rgb(85, 85, 85)" />
           </TouchableOpacity>
-          <Text style={{ fontSize: 22, fontWeight: "500" }}>{category}</Text>
-        </View>
-      </View>
-      <View
-        style={{
-          height: 50,
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderBottomColor: "#ccc",
-          borderBottomWidth: 1,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-          >
-            <Text style={{ fontSize: 18 }}>Mặc định</Text>
-            <FontAwesome6
-              name="arrow-right-arrow-left"
-              size={16}
-              color={COLORS.primaryBackgroundBox}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => bottomSheetRef.current?.collapse()}
-            style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-          >
-            <AntDesign name="filter" size={16} color="rgb(85, 85, 85)" />
-            <Text style={{ fontSize: 18 }}>Bộ lọc</Text>
-          </TouchableOpacity>
+          <View style={{position:'absolute',left:130,bottom:20}}>
+          <Text style={{ fontSize: 22, fontWeight: "500"}}>Kết quả tìm kiếm</Text>
+          </View>
         </View>
       </View>
       <FlatList
@@ -206,3 +167,4 @@ export default function CategoryProducts({ navigation,route }) {
     </SafeAreaView>
   );
 }
+

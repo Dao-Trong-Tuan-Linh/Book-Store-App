@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -7,7 +7,6 @@ import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { useRef, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -18,31 +17,30 @@ import {
   TouchableOpacity
 } from "react-native";
 import { COLORS } from "../theme/theme";
+import HeaderNoAccount from "../components/HeaderNoAccount";
+import HeaderAccount from "../components/HeaderAccount";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextType } from "../context/AuthContext";
+import {signOut} from "firebase/auth"
+import { auth } from "../firebase/firebase";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function Account({ navigation, route }) {
-  
+  const {currentUser,setCurrentUser} = useContext(AuthContext) as AuthContextType
+
   return (
     <>
     <ScrollView style={{width:screenWidth,flex:1,backgroundColor:'white'}}>
         <View style={{width:screenWidth}}>
-        <View style={{position:'relative',alignItems:'center',justifyContent:'center'}}>
-          <ImageBackground style={{width:screenWidth,height:250}} source={{uri:"https://img.freepik.com/free-vector/books-store-house-city-street_107791-15382.jpg?w=1380&t=st=1715525305~exp=1715525905~hmac=75af40ffbc1a8308fb1d8a2107621fc02cb5501221dac510e5e182d716ca06a9"}} resizeMode="cover"/>
-          <View style={{position:'absolute',alignItems:'center'}}>
-          <Text style={{fontSize:24,fontWeight:'600',color:'white'}}>Book Store</Text>
-          <Text style={{fontSize:16,fontWeight:'400',color:'white'}}>Kết nối để nhận nhiều ưu đãi</Text>
-          </View>
-          <View style={{position:'absolute',bottom:20,flexDirection:'row',justifyContent:'space-around',width:screenWidth}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login',{ isNavigation: false })} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,borderColor:'white',borderWidth:1,borderRadius:5,alignItems:'center'}}>
-              <Text style={{color:'white'}}>Đăng nhập</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Register',{ isNavigation: false })} style={{width:screenWidth/2 - 50,paddingTop:10,paddingBottom:10,backgroundColor:'white',borderRadius:5,alignItems:'center'}}>
-              <Text style={{color:'#222'}}>Đăng ký</Text>
-            </TouchableOpacity>
-          </View>
+          {currentUser ? (
+            <HeaderAccount displayName={currentUser.fullName} email={currentUser.email}/>
+          ) : (
+            <HeaderNoAccount navigation={navigation}/>
+          )}
+        <View>
+          <View style={{alignItems:'center',justifyContent:'space-between'}}></View>
         </View>
-
         <View style={{marginTop:20}}>
           <View style={{paddingTop:15,paddingBottom:15,paddingLeft:10,paddingRight:10,backgroundColor:'#f8f1e4',gap:20}}>
             <View style={{flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between'}}>
@@ -52,10 +50,10 @@ export default function Account({ navigation, route }) {
               </Pressable>
             </View>
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-              <Pressable style={{flexDirection:'column',alignItems:'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("PurchaseOrder")} style={{flexDirection:'column',alignItems:'center'}}>
               <MaterialIcons name="payment" size={27} color="black" />
               <Text>Chờ thanh toán</Text>
-              </Pressable>
+              </TouchableOpacity>
               <Pressable style={{flexDirection:'column',alignItems:'center'}}>
               <AntDesign name="inbox" size={27} color="black" />
               <Text>Đang xử lý</Text>
@@ -121,6 +119,17 @@ export default function Account({ navigation, route }) {
             </Pressable>
           </View>
         </View>
+        {currentUser && (
+          <View style={{marginTop:20,alignItems:'center',justifyContent:'center',marginBottom:20}}>
+          <TouchableOpacity onPress={() => {
+            signOut(auth)
+            setCurrentUser(null)
+            navigation.navigate('Login',{ isNavigation: false })
+          }} style={{width:'90%',height:50,backgroundColor:COLORS.primaryYellowColor,alignItems:'center',justifyContent:'center'}}>
+            <Text style={{fontSize:20,color:'white',fontWeight:'600'}}>Đăng xuất</Text>
+          </TouchableOpacity>
+          </View>
+        )}
         </View>
       </ScrollView>
     </>

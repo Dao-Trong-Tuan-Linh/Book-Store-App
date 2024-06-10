@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import { COLORS } from "../theme/theme";
 import { AntDesign } from "@expo/vector-icons";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebase";
+import ShowAlert from "../components/ShowAlert";
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -22,12 +25,66 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Login({ navigation, route }) {
   const [isNavigation, setIsNavigation] = useState(false);
+  const [email,setEmail] = useState("")
+  const [password,setPassword] = useState("")
+  const [errors,setErrors] = useState({errorEmail:"",errorPassword:""})
+  const [errorInfo,setErrorInfo] = useState(false)
 
   useEffect(() => {
     if (route.params.isNavigation) {
       setIsNavigation(route.params.isNavigation);
     }
   }, []);
+
+  useEffect(() => {
+    if (!email) {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorEmail: "Vui lòng nhập email của bạn",
+      }));
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorEmail: "Email của bạn chưa hợp lệ",
+      }));
+    }else {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorEmail: "",}))
+    }
+
+    if(!password) {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorPassword: "Vui lòng nhập mật khẩu của bạn",
+      }));
+    } else if(password.length < 6) {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorPassword: "Mật khẩu của bạn cần ít nhất 6 ký tự",
+      }));
+    } else {
+      setErrors((prevState) => ({
+        ...prevState,
+        errorPassword: "",}))
+    }
+  },[email,password])
+
+  useEffect(() => {
+    if(errorInfo) ShowAlert({title:'Thông báo',message:'Email hay mật khẩu chưa đúng'})
+  },[errorInfo])
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth,email,password)
+      navigation.navigate("Tab", { screen: "Account" })
+    } catch (error) {
+    setErrorInfo(true)
+      console.log(error)
+    }
+  }
+
+  
   return (
     <DismissKeyboard>
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -60,7 +117,7 @@ export default function Login({ navigation, route }) {
             <View style={{ marginTop: 30, gap: 20 }}>
               <View style={{ gap: 5 }}>
                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                  Số điện thoại
+                  Email
                 </Text>
                 <Pressable
                   style={{
@@ -73,10 +130,16 @@ export default function Login({ navigation, route }) {
                 >
                   <TextInput
                     style={{ width: "100%", height: "100%" }}
-                    placeholder="Nhập số điện thoại"
-                    keyboardType="numeric"
+                    placeholder="Nhập email của bạn..."
+                    value={email}
+                    onChangeText={(e) => setEmail(e)}
                   />
                 </Pressable>
+                {errors.errorEmail && (
+                  <Text style={{ color: COLORS.primaryBackgroundBox }}>
+                    {errors.errorEmail}
+                  </Text>
+                )}
               </View>
               <View style={{ gap: 5 }}>
                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
@@ -93,9 +156,17 @@ export default function Login({ navigation, route }) {
                 >
                   <TextInput
                     style={{ width: "100%", height: "100%" }}
-                    placeholder="Nhập mật khẩu"
+                    placeholder="Nhập mật khẩu của bạn..."
+                    value={password}
+                    onChangeText={(e) => setPassword(e)}
+                    secureTextEntry={true} 
                   />
                 </Pressable>
+                {errors.errorPassword && (
+                  <Text style={{ color: COLORS.primaryBackgroundBox }}>
+                    {errors.errorPassword}
+                  </Text>
+                )}
               </View>
             </View>
             <TouchableOpacity
@@ -107,6 +178,8 @@ export default function Login({ navigation, route }) {
                 alignItems: "center",
                 borderRadius: 5,
               }}
+              disabled={!email || !password}
+              onPress={() => handleLogin()}
             >
               <Text style={{ color: "white", fontSize: 16, fontWeight: "500" }}>
                 Đăng nhập

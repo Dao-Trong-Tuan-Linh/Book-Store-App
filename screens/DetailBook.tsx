@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useMemo, useState, useContext } from "react";
 import {
   TouchableOpacity,
   View,
@@ -6,7 +6,7 @@ import {
   Text,
   ScrollView,
   Image,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { COLORS } from "../theme/theme";
 import { AntDesign } from "@expo/vector-icons";
@@ -14,21 +14,134 @@ import Carousel from "pinar";
 import ConfirmCart from "../components/ConfirmCart";
 import ShowAlert from "../components/ShowAlert";
 import ExpandableText from "../components/ExpandableText";
+import { Book } from "./Home";
+import { formatNumber, numberPercent } from "../components/CategoryBooks";
+import useGetRelatedBooks from "../hooks/useGetRelatedBooks";
+import RelatedBooks from "../components/RelatedBooks";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextType } from "../context/AuthContext";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import Spinner from "react-native-loading-spinner-overlay";
+import {useFocusEffect} from "@react-navigation/native"
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+export interface BookCart {
+  bid: string;
+  bookName: string;
+  image: string;
+  newPrice: string;
+  oldPrice: string;
+  quantity: number;
+}
 
-export default function DetailBook({ navigation }) {
-  const [isVisible,setIsVisible] = useState(false)
-  const images = [
-    { id: 0, img: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg" },
-    { id: 1, img: "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/tuoi_tho_du_doi___tap_1_tai_ban_2019/2021_07_29_16_46_46_2-390x510.jpg?_gl=1*1j1o0uv*_ga*MjAxMjA0MzAyOC4xNzEwMjI4MTkz*_ga_460L9JMC2G*MTcxNTUyNTU4Ni4xNS4xLjE3MTU1MjcxMTQuNTQuMC4xOTkxNDkyMDcy*_gcl_aw*R0NMLjE3MTAyNjE2OTUuQ2owS0NRanctci12QmhDLUFSSXNBR2dVTzJBQ3liTzRpZkJQcEhQWnROb3pEVE4tWk1FaFc1YVV2ekcxTWFPdVAtdWtVUVdEME5SNEd4TWFBaWtJRUFMd193Y0I.*_gcl_au*MTM4OTc0MjI5My4xNzEwMjI4MTkz" },
-  ];
+export interface ICart {
+  uid: string;
+  books: BookCart[];
+}
+export default function DetailBook({ navigation, route }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const { currentUser } = useContext(AuthContext) as AuthContextType;
+  const [isLoading, setIsLoading] = useState(false);
+  const [book,setBook] = useState<Book>(route.params.book)
+
+  useFocusEffect(React.useCallback(() => {
+    setBook(route.params.book)
+  },[route.params.book]))
+
+  const handleAdd = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleMinus = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
 
   
-  const showAlert = () => ShowAlert({title:'Thông báo',message:'Số lượng x không có sẵn'})
+
+  const { relatedBooks, loading: loadingRelatedBooks } = useGetRelatedBooks(
+    book.category,
+    book.bid
+  );
+
+  const handleAddBookToCart = async (uid: string) => {
+    try {
+      await updateDoc(doc(db, "carts", uid), {
+        books: arrayUnion({
+          bid: book.bid,
+          image: book.images[0],
+          bookName: book.bookName,
+          newPrice: book.newPrice,
+          oldPrice: book.oldPrice,
+          quantity,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      if (currentUser) {
+        setIsLoading(true);
+        const userCart = (
+          await getDoc(doc(db, "carts", currentUser.uid))
+        ).data() as ICart;
+        const check = userCart.books.find((b) => b.bid == book.bid);
+        console.log(check);
+        if (check) {
+          showAlert();
+        } else {
+          await handleAddBookToCart(currentUser.uid);
+          setIsVisible(true);
+        }
+        setIsLoading(false);
+      } else {
+        navigation.navigate("Tab", { screen: "Login" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    try {
+      if (currentUser) {
+        setIsLoading(true);
+        const userCart = (
+          await getDoc(doc(db, "carts", currentUser.uid))
+        ).data() as ICart;
+        const check = userCart.books.map((b) => b.bid == book.bid);
+        if (check) {
+          showAlert();
+        } else {
+          await handleAddBookToCart(currentUser.uid);
+        }
+        setIsLoading(false);
+      } else {
+        navigation.navigate("Tab", { screen: "Login" });
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const showAlert = () =>
+    ShowAlert({
+      title: "Thông báo",
+      message: "Bạn đã thêm sách này vào giỏ hàng",
+    });
   return (
     <View style={{ flex: 1 }}>
+      <Spinner
+        visible={isLoading}
+        textContent="Đang xử lí..."
+        textStyle={{ color: "#fff" }}
+      />
       <View
         style={{
           height: 90,
@@ -61,475 +174,137 @@ export default function DetailBook({ navigation }) {
           </View>
         </View>
       </View>
-      <ScrollView style={{ backgroundColor: "#e8e8e8"}}>
-       <View style={{flexDirection:'column',gap:10}}>
-       <View
-          style={{
-            paddingHorizontal: 15,
-            paddingBottom:10,
-            backgroundColor: "white",
-            flexDirection: "column",
-          }}
-        >
+      <ScrollView style={{ backgroundColor: "#e8e8e8" }}>
+        <View style={{ flexDirection: "column", gap: 10 }}>
           <View
             style={{
-              marginBottom: 8,
-              alignItems: "center",
-              justifyContent: "center",
-              // width: "100%",
-              // height:'100%'
+              paddingHorizontal: 15,
+              paddingBottom: 10,
+              backgroundColor: "white",
+              flexDirection: "column",
             }}
           >
             <View
               style={{
-                width: 300,
-                height: 300,
-                maxWidth: "100%",
-                maxHeight: "100%",
+                marginBottom: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                // width: "100%",
+                // height:'100%'
               }}
             >
-              <Carousel showsControls={false} loop>
-                {images.map((item) => (
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit:'contain'
-                    }}
-                    source={{uri:`${item.img}`}}
-                    key={item.id}
-                  />
-                ))}
-              </Carousel>
-            </View>
-          </View>
-
-          <View>
-            <Text>Tuổi thơ dữ dội</Text>
-            <View style={{ flexDirection: "row",alignItems:'center',gap:15 }}>
-              <Text style={{fontSize:24,color:COLORS.textNewPrice,fontWeight:'600'}}>60.000 đ</Text>
-              <Text style={{fontSize:16,color:COLORS.textOldPrice,textDecorationLine: "line-through"}}>72.000 đ</Text>
               <View
                 style={{
-                  paddingHorizontal:10,
-                  paddingVertical:5,
-                  borderRadius: 7,
-                  backgroundColor: COLORS.primaryBackgroundBox,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  width: 300,
+                  height: 300,
+                  maxWidth: "100%",
+                  maxHeight: "100%",
                 }}
               >
-                <Text style={{ color: COLORS.textWhiteColor,fontSize:20,fontWeight:'600' }}>-20%</Text>
+                <Carousel showsControls={false} loop>
+                  {book.images.map((image, index) => (
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                      source={{ uri: `${image}` }}
+                      key={index}
+                    />
+                  ))}
+                </Carousel>
+              </View>
+            </View>
+
+            <View>
+              <Text>{book.bookName}</Text>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
+              >
+                <Text
+                  style={{
+                    fontSize: 24,
+                    color: COLORS.textNewPrice,
+                    fontWeight: "600",
+                  }}
+                >
+                  {formatNumber(book.newPrice)} đ
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: COLORS.textOldPrice,
+                    textDecorationLine: "line-through",
+                  }}
+                >
+                  {formatNumber(book.oldPrice)} đ
+                </Text>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 7,
+                    backgroundColor: COLORS.primaryBackgroundBox,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: COLORS.textWhiteColor,
+                      fontSize: 20,
+                      fontWeight: "600",
+                    }}
+                  >
+                    -{numberPercent(book.newPrice, book.oldPrice)}%
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <View style={{backgroundColor:'white'}}>
-          <View style={{padding:10,borderBottomColor:'#ccc',borderBottomWidth:1}}>
-            <Text style={{fontSize:20,fontWeight:'600'}}>Thông tin sản phẩm</Text>
-          </View>
-          <View style={{paddingHorizontal:10,paddingTop:5,flexDirection:'row',gap:60}}>
-            <View style={{flexDirection:'column',gap:15}}>
-              <Text>Mã hàng</Text>
-              <Text>Nhà cung cấp</Text>
-              <Text>Tác giả</Text>
-              <Text>Nhà xuất bản</Text>
-              <Text>Năm xuất bản</Text>
+          <View style={{ backgroundColor: "white" }}>
+            <View
+              style={{
+                padding: 10,
+                borderBottomColor: "#ccc",
+                borderBottomWidth: 1,
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                Thông tin sản phẩm
+              </Text>
             </View>
-            <View style={{flexDirection:'column',gap:15}}>
-              <Text>123456</Text>
-              <Text>abcd</Text>
-              <Text>Phùng Quán</Text>
-              <Text>Nhà xuất bản Kim Đồng</Text>
-              <Text>2017</Text>
-            </View>
-          </View>
-          <ExpandableText>
-          “Tuổi Thơ Dữ Dội” là một câu chuyện hay, cảm động viết về tuổi thơ. Sách
-        dày 404 trang mà người đọc không bao giờ muốn ngừng lại, bị lôi cuốn vì
-        những nhân vật ngây thơ có, khôn ranh có, anh hùng có, vì những sự việc
-        khi thì ly kỳ, khi thì hài hước, khi thì gây xúc động đến ứa nước mắt...
-        "Tuổi Thơ Dữ Dội” không phải chỉ là một câu chuyện cổ tích, mà là một
-        câu chuyện có thật ở trần gian, ở đó, những con người tuổi nhỏ đã tham
-        gia vào cuộc kháng chiến chống xâm lược bảo vệ Tổ quốc với một chuỗi
-        những chiến công đầy ắp li kì và hấp dẫn. Đọc Tuổi Thơ Dữ Dội chính là
-        đọc lại một phần lịch sử tuổi thơ Việt, thấm đẫm xúc động, cảm phục và
-        tự hào..."
-        Nhà thơ - nhạc sĩ Nguyễn Trọng Tạo
-        "Có một viên ngọc quý thời gian dành riêng để ban tặng con người, đó là
-        Tuổi thơ. Viên ngọc màu nhiệm, trong sáng nhưng quá mong manh, không thể
-        tìm thấy lần thứ hai trong đời. Và có một thế hệ người Việt chưa bao giờ
-        được cầm viên ngọc trên tay, “Tuổi thơ dữ dội” của Phùng Quán được viết
-        cho thế hệ đó. Hãy đọc để nhớ lại, để tự hào, và để cầu nguyện cho những
-        Tuổi thơ sắp ra đời…”
-        Nhà văn Hoàng Phủ Ngọc Tường
-          </ExpandableText>
-        </View>
-        <View style={{backgroundColor:'white',flexDirection:'column',gap:10,paddingBottom:10,marginBottom:70}}>
-            <View style={{padding:10,borderBottomColor:COLORS.primaryBackgroundBox,borderBottomWidth:1}}>
-            <Text style={{fontSize:20,color:COLORS.primaryBackgroundBox,fontWeight:'600'}}>Sản phẩm liên quan</Text>
-            </View>
-          <ScrollView horizontal={true}>
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    width: screenWidth * 0.5,
-                    borderColor: COLORS.borderColorProduct,
-                    borderRadius: 5,
-                    alignItems: "center",
-                    paddingBottom: 10,
-                    borderWidth: 1,
-                  }}
-                >
-                 <TouchableOpacity onPress={() => navigation.navigate("DetailBook")}>
-                 <Image
-                    style={{
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
-                  />
-                 </TouchableOpacity>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      width: screenWidth * 0.35,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <View style={{ flexDirection: "column" }}>
-                        <Text
-                          style={{
-                            color: COLORS.textNewPrice,
-                            fontWeight: "600",
-                          }}
-                        >
-                          60.000 đ
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.textOldPrice,
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          72.000 đ
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          padding: 3,
-                          borderRadius: 2,
-                          backgroundColor: COLORS.primaryBackgroundBox,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ color: COLORS.textWhiteColor }}>
-                          -20%
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      style={{
-                        width: "100%",
-                        borderColor: COLORS.borderColorProduct,
-                        borderWidth: 1,
-                        padding: 5,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: COLORS.primaryBackgroundBox,
-                          fontWeight: "600",
-                        }}
-                      >
-                        Mua ngay
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    width: screenWidth * 0.5,
-                    borderColor: COLORS.borderColorProduct,
-                    borderRadius: 5,
-                    alignItems: "center",
-                    paddingBottom: 10,
-                    borderWidth: 1,
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
-                  />
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      width: screenWidth * 0.35,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <View style={{ flexDirection: "column" }}>
-                        <Text
-                          style={{
-                            color: COLORS.textNewPrice,
-                            fontWeight: "600",
-                          }}
-                        >
-                          60.000 đ
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.textOldPrice,
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          72.000 đ
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          padding: 3,
-                          borderRadius: 2,
-                          backgroundColor: COLORS.primaryBackgroundBox,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ color: COLORS.textWhiteColor }}>
-                          -20%
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      style={{
-                        width: "100%",
-                        borderColor: COLORS.borderColorProduct,
-                        borderWidth: 1,
-                        padding: 5,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: COLORS.primaryBackgroundBox,
-                          fontWeight: "600",
-                        }}
-                      >
-                        Mua ngay
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    width: screenWidth * 0.5,
-                    borderColor: COLORS.borderColorProduct,
-                    borderRadius: 5,
-                    alignItems: "center",
-                    paddingBottom: 10,
-                    borderWidth: 1,
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
-                  />
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      width: screenWidth * 0.35,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <View style={{ flexDirection: "column" }}>
-                        <Text
-                          style={{
-                            color: COLORS.textNewPrice,
-                            fontWeight: "600",
-                          }}
-                        >
-                          60.000 đ
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.textOldPrice,
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          72.000 đ
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          padding: 3,
-                          borderRadius: 2,
-                          backgroundColor: COLORS.primaryBackgroundBox,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ color: COLORS.textWhiteColor }}>
-                          -20%
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      style={{
-                        width: "100%",
-                        borderColor: COLORS.borderColorProduct,
-                        borderWidth: 1,
-                        padding: 5,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: COLORS.primaryBackgroundBox,
-                          fontWeight: "600",
-                        }}
-                      >
-                        Mua ngay
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    width: screenWidth * 0.5,
-                    borderColor: COLORS.borderColorProduct,
-                    borderRadius: 5,
-                    alignItems: "center",
-                    paddingBottom: 10,
-                    borderWidth: 1,
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("../assets/tuoi-tho-du-doi.jpg")}
-                  />
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      width: screenWidth * 0.35,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text>Tuổi thơ dữ dội-Tập 1</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <View style={{ flexDirection: "column" }}>
-                        <Text
-                          style={{
-                            color: COLORS.textNewPrice,
-                            fontWeight: "600",
-                          }}
-                        >
-                          60.000 đ
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.textOldPrice,
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          72.000 đ
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          padding: 3,
-                          borderRadius: 2,
-                          backgroundColor: COLORS.primaryBackgroundBox,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ color: COLORS.textWhiteColor }}>
-                          -20%
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      style={{
-                        width: "100%",
-                        borderColor: COLORS.borderColorProduct,
-                        borderWidth: 1,
-                        padding: 5,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: COLORS.primaryBackgroundBox,
-                          fontWeight: "600",
-                        }}
-                      >
-                        Mua ngay
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
+            <View
+              style={{
+                paddingHorizontal: 10,
+                paddingTop: 5,
+                flexDirection: "row",
+                gap: 60,
+              }}
+            >
+              <View style={{ flexDirection: "column", gap: 15 }}>
+                <Text>Mã hàng</Text>
+                <Text>Tác giả</Text>
+                <Text>Nhà xuất bản</Text>
+                <Text>Thể loại</Text>
               </View>
-            </ScrollView>
+              <View style={{ flexDirection: "column", gap: 15 }}>
+                <Text>{book.bid}</Text>
+                <Text>{book.author}</Text>
+                <Text>{book.publisher}</Text>
+                <Text>{book.genre}</Text>
+              </View>
+            </View>
+            <ExpandableText>{book.description}</ExpandableText>
+          </View>
+          {loadingRelatedBooks ? (
+            <LoadingSpinner />
+          ) : (
+            <RelatedBooks navigation={navigation} relatedBooks={relatedBooks} route={route} />
+          )}
         </View>
-       </View>
       </ScrollView>
       <View
         style={{
@@ -564,13 +339,13 @@ export default function DetailBook({ navigation }) {
             borderRightColor: "#666",
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity style={{ width: "20%" }} onPress={handleMinus}>
             <AntDesign name="minus" size={20} color="#666" />
           </TouchableOpacity>
           <Text style={{ color: "black", fontSize: 16, fontWeight: "600" }}>
-            1
+            {quantity}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity style={{ width: "20%" }} onPress={handleAdd}>
             <AntDesign name="plus" size={20} color="#666" />
           </TouchableOpacity>
         </View>
@@ -580,7 +355,7 @@ export default function DetailBook({ navigation }) {
             alignItems: "center",
             justifyContent: "center",
           }}
-          onPress={() => setIsVisible(true)}
+          onPress={handleAddToCart}
         >
           <Text
             style={{
@@ -599,14 +374,18 @@ export default function DetailBook({ navigation }) {
             justifyContent: "center",
             backgroundColor: COLORS.primaryBackgroundBox,
           }}
-          onPress={showAlert}
+          onPress={handleBuyNow}
         >
           <Text style={{ fontSize: 16, fontWeight: "600", color: "white" }}>
             Mua ngay
           </Text>
         </TouchableOpacity>
       </View>
-      <ConfirmCart isVisible={isVisible} setIsVisible={setIsVisible} navigation={navigation}/>
+      <ConfirmCart
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        navigation={navigation}
+      />
     </View>
   );
 }

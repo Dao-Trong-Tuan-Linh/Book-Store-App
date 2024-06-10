@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef, useContext, useEffect,useId } from "react";
 import {
   View,
   TouchableOpacity,
@@ -16,6 +16,14 @@ import { COLORS } from "../theme/theme";
 import VNLocalPlus from "vn-local-plus";
 import SelectComponent from "../components/SelectComponent";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { AuthContext } from "../context/AuthContext";
+import { AuthContextType } from "../context/AuthContext";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { BookCart } from "./DetailBook";
+import { ICart } from "./DetailBook";
+import CheckOrder from "../components/CheckOrder";
+import uuid from "react-native-uuid"
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -23,16 +31,66 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
-
+interface InfoUser {
+  uid:string,
+  fullName:string,
+  email:string,
+  phone:string
+}
 export default function DeliveryAddress({ navigation, route }) {
-  const [fullName,setFullName] = useState("")
-  const [phone,setPhone] = useState("")
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-  const [selectedWard,setSelectedWard] = useState<string | null>(null);
-  const [address,setAddress] = useState("")
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
+  const [address, setAddress] = useState("");
+  const [total, setTotal] = useState(0);
+  const [cart, setCart] = useState<BookCart[]>([]);
+  
+
+  const { currentUser } = useContext(AuthContext) as AuthContextType;
+
+  useEffect(() => {
+    const handleGetInfoUser = async () => {
+      try {
+        if (currentUser) {
+          const infoUser = (await getDoc(doc(db, "users", currentUser.uid))).data();
+          if (infoUser) {
+            setFullName(infoUser.fullName);
+            setPhone(infoUser.phone);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleGetCart = async () => {
+      try {
+        if (currentUser) {
+          const cartData = (await getDoc(doc(db, "carts", currentUser.uid))).data();
+          if (cartData) {
+            setCart(cartData.books);
+          }
+        } else {
+          navigation.navigate("Tab", { screen: "Login" });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    handleGetInfoUser();
+    handleGetCart();
+  }, [currentUser, navigation]);
+
+  useEffect(() => {
+    let totalPrice = 0;
+    for (let i = 0; i < cart.length; i++) {
+      totalPrice += Number(cart[i].newPrice) * Number(cart[i].quantity);
+    }
+    setTotal(totalPrice);
+  }, [cart]);
 
   const provinces = useMemo(
     () =>
@@ -45,7 +103,7 @@ export default function DeliveryAddress({ navigation, route }) {
 
   const districts = useMemo(() => {
     if (selectedProvince) {
-      return VNLocalPlus.getDistrictsByProvinceCode(selectedProvince).map(item => ({
+      return VNLocalPlus.getDistrictsByProvinceCode(selectedProvince).map((item) => ({
         label: item.name,
         value: item.code,
       }));
@@ -55,7 +113,7 @@ export default function DeliveryAddress({ navigation, route }) {
 
   const wards = useMemo(() => {
     if (selectedDistrict) {
-      return VNLocalPlus.getWardsByDistrictCode(selectedDistrict).map(item => ({
+      return VNLocalPlus.getWardsByDistrictCode(selectedDistrict).map((item) => ({
         label: item.name,
         value: item.code,
       }));
@@ -63,10 +121,42 @@ export default function DeliveryAddress({ navigation, route }) {
     return [];
   }, [selectedDistrict]);
 
-  
+  const handleSubmit = async () => {
+    try {
+      const oid = uuid.v4() as string
+      if(currentUser && selectedProvince && selectedDistrict && selectedWard) {
+        await setDoc(doc(db, "orders", oid), {
+          oid,
+          uid: currentUser?.uid,
+          fullName,
+          phone,
+          province: VNLocalPlus.getWardByCode(selectedWard).provinceName,
+          district: VNLocalPlus.getWardByCode(selectedWard).districtName,
+          ward: VNLocalPlus.getWardByCode(selectedWard).name,
+          address,
+          paymentMethod: "cod",
+          books: cart,
+          totalPrice: total,
+          deliveryStatus:"Đang xử lí"
+        });
+        await updateDoc(doc(db,"carts",currentUser.uid),{
+          books:[]
+        })
+        setFullName("")
+        setAddress("")
+        setPhone("")
+        setSelectedProvince(null)
+        setSelectedDistrict(null)
+        setSelectedWard(null)
+        navigation.navigate("PurchaseOrder")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <DismissKeyboard>
-      <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <View
           style={{
             position: "relative",
@@ -189,41 +279,7 @@ export default function DeliveryAddress({ navigation, route }) {
               <Text>Thanh toán bằng tiền mặt khi nhận hàng</Text>
               </View>
             </View>
-            <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>Kiểm tra lại đơn hàng</Text>
-              <View style={{flexDirection:'row',alignItems:'center',borderTopColor:'#e6e9ec',borderTopWidth:1}}>
-              <Image
-                      style={{
-                        width: screenWidth * 0.36,
-                        height: screenHeight * 0.2,
-                        resizeMode: "contain",
-                      }}
-                      source={{uri:"https://cdn0.fahasa.com/media/catalog/product/i/m/image_187162.jpg"}}
-                    />
-              <View style={{gap:5}}>
-                <Text numberOfLines={4}>“Chém" Tiếng Anh Không Cần Động Não - Tặng Kèm Bộ Video Luyện Nghe-Nói + Sổ Học Từ Vựng “Chém" Tiếng Anh Không Cần Động Não - Tặng Kèm Bộ Video Luyện Nghe-Nói + Sổ Học Từ Vựng</Text>
-                <View style={{flexDirection:'row',gap:10}}>
-                <Text
-                          style={{
-                            color: COLORS.textNewPrice,
-                            fontWeight: "600",
-                          }}
-                        >
-                          52.000 đ
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.textOldPrice,
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          80.000 đ
-                        </Text>
-                </View>
-                <Text>Số lượng:1</Text>
-                </View>      
-              </View>
-            </View>
+            <CheckOrder cart={cart}/>
           </View>
         </ScrollView>
         <View
@@ -250,11 +306,11 @@ export default function DeliveryAddress({ navigation, route }) {
           flexDirection: "row",
         }}
       >
-       <TouchableOpacity style={{width:'70%',height:50,backgroundColor:COLORS.primaryBackgroundBox,borderRadius:5,alignItems:'center',justifyContent:'center'}}>
+       <TouchableOpacity onPress={handleSubmit} style={{width:'70%',height:50,backgroundColor:COLORS.primaryBackgroundBox,borderRadius:5,alignItems:'center',justifyContent:'center'}}>
         <Text style={{color:'#fff',fontSize:20,fontWeight:'600'}}>Xác nhận thanh toán</Text>
        </TouchableOpacity>
       </View>
-      </ScrollView>
+      </View>
     </DismissKeyboard>
   );
 }

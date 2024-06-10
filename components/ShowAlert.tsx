@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Button, Alert } from "react-native";
+import { Alert } from "react-native";
 
 interface ShowAlertProps {
     title:string,
@@ -9,7 +9,6 @@ export default function ShowAlert({title,message}:ShowAlertProps) {
   return Alert.alert(`${title}`, `${message}`, [
     {
       text: "OK",
-      onPress: () => console.log("OK pressed"),
     },
   ]);
 }

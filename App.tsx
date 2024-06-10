@@ -11,6 +11,9 @@ import NetInfo from "@react-native-community/netinfo"
 import {Alert,AppRegistry } from 'react-native';
 import CategoryProducts from "./screens/CategoryProducts";
 import DeliveryAddress from "./screens/DeliveryAddress";
+import AuthContextProvider from "./context/AuthContext";
+import SearchBooks from "./screens/SearchBooks";
+import PurchaseOrder from "./screens/PurchaseOrder";
 
 const Stack = createStackNavigator()
 export default function App() {
@@ -34,17 +37,21 @@ export default function App() {
 		);
 	};
   return (
-    <NavigationContainer>
+    <AuthContextProvider>
+      <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false,...TransitionPresets.SlideFromRightIOS}}>
         <Stack.Screen name="Tab" component={TabNavigator}/>
         <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="SearchBooks" component={SearchBooks}/>
         <Stack.Screen name="Register" component={Register}/>
         <Stack.Screen name="Cart" component={Cart}/>
         <Stack.Screen name="DetailBook" component={DetailBook}/>
         <Stack.Screen name="CategoryProducts" component={CategoryProducts}/>
         <Stack.Screen name="DeliveryAddress" component={DeliveryAddress}/>
+        <Stack.Screen name="PurchaseOrder" component={PurchaseOrder}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthContextProvider>
   );
 }
 
